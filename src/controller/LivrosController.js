@@ -2,13 +2,17 @@ const livros = require("../models/Livro")
 
 class LivroController {
     static listarLivros = (req, res) => {
-        livros.find((error, livros) =>{
+        livros.find()
+        .populate("autor")
+        .exec((err, livros) => {
             res.status(200).json(livros)
         })
     }
     static listarLivrosPorId = (req, res) => {
         const id = req.params.id;
-        livros.findById(id, (err, livros) => {
+        livros.findById(id)
+        .populate("autor", "nome")
+        .exec((err, livros) => {
             if(err) {
                 res.status(400).send({message: `${err.message} - id do livro não localizado`})
             } else {
